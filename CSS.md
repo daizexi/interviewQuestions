@@ -317,5 +317,184 @@
 >
 > 
 
-# 12.实现块元素垂直居中的方法
+# 12.div中实现元素垂直居中的方法
+> - 图片垂直居中的方法（也可以把块元素转换成inline-block元素，那么就和图片居中一样了）。
+>
+>   1. 结合display: table-cell;和vertical-align: middle;
+>
+>   ```{html}
+>   <!DOCTYPE html>
+>   <html>
+>       <head>
+>           <meta charset = "utf-8"/>
+>           <style type = "text/css">
+>               div{
+>                   display: table-cell;
+>                   width: 40em;
+>                   height: 40em;
+>                   font-size: 10px;
+>                   border: 0.1em solid red;
+>                   vertical-align: middle;
+>                   text-align: center;
+>               }
+>               img{
+>                   width: 10em;
+>                   height: 10em;
+>               }
+>           </style>
+>       </head>
+>       <body>
+>           <div class = "wrapper">
+>               <div id = "wrapper-first"><img src = "8C52A09A073693FCC58E4E646220AE35.jpg"/></div>
+>           </div>
+>       </body>
+>   </html>
+>   ```
+>
+> - 把块元素使用display属性设置为inline-block类型，再把块元素的父元素设置text-align: center;属性，这样可以使得块元素水平居中。
+>
+>   ```{html}
+>   <!DOCTYPE html>
+>   <html>
+>       <head>
+>           <meta charset="utf-8"/>
+>           <style type = "text/css">
+>               .wrapper{
+>                   border: 0.1em solid red;
+>                   font-size: 10px;
+>                   width: 10em;
+>                   height: 10em;
+>                   text-align: center;
+>               }
+>               .wrapper>#wrapper-first{
+>                   background-color: cadetblue;
+>                   width: 5em;
+>                   height: 5em;
+>                   display: inline-block;
+>               }
+>           </style>
+>       </head>
+>       <body>
+>           <div class = "wrapper">
+>               <div id = "wrapper-first"></div>
+>           </div>
+>       </body>
+>   </html>
+>   ```
+>
+> - 使用margin: 0 auto;可以直接设置块元素水平居中。（margin: 0 auto;是对当前元素设置的）。
+>
+>   ```{html}
+>   <!DOCTYPE html>
+>   <html>
+>       <head>
+>           <meta charset="utf-8"/>
+>           <style type = "text/css">
+>               .wrapper{
+>                   border: 0.1em solid red;
+>                   font-size: 10px;
+>                   width: 10em;
+>                   height: 10em;
+>                   text-align: center;
+>               }
+>               .wrapper>#wrapper-first{
+>                   background-color: cadetblue;
+>                   width: 5em;
+>                   height: 5em;
+>                   margin: 0 auto;
+>               }
+>           </style>
+>       </head>
+>       <body>
+>           <div class = "wrapper">
+>               <div id = "wrapper-first"></div>
+>           </div>
+>       </body>
+>   </html>
+>   ```
+>
+>   
+
+# 13.<img/>是什么类型的元素
+
+> <img/>是行内块元素，它可以设置width属性和height属性，并可以和其他行内元素在显示效果上共占一行。
+>
+> <input/>也是行内块元素。
+
+# 14.行内元素和块元素的区别
+> - 行内元素
+>
+>   1. 行内元素可以和其他行内元素共占一行。
+>
+>   2. 行内元素内可以容纳其他行内元素。
+>
+>   3. 行内元素不能设置width属性和height属性。
+>
+>   4. 行内元素只能设置marigin-left属性和margin-right属性。
+> - 块元素
+>   1. 块元素排斥其他元素和它共占一行。
+>   2. 块元素内部科一般容纳其他块元素或行内元素。
+>   3. 块元素可以设置width属性和height属性。
+>   4. 块元素可以设置4个方向上的margin属性。
+
+# 15.子元素width之和大于父元素width之和，设置了inline-block也不能共占一行。
+
+> 正确
+>
+> ```{html}
+> <!DOCTYPE html>
+> <html>
+>     <head>
+>         <meta charset = "utf-8"/>
+>         <!-- <meta http-equiv = "refresh" content = "6;url = https://www.baidu.com"/> -->
+>         <link type = "text/css" rel = "stylesheet" href = "a.css"/>
+>         <style type = "text/css">
+>             html{
+>                 font-size: 62.5%;
+>             }
+>             .wrapper{
+>                 width: 10em;
+>                 height: 10em;
+>                 font-size: 1em;
+>             }
+>             .wrapper>div{
+>                 background-color: blanchedalmond;
+>                 display: inline-block;
+>                 width: 10em;
+>                 height: 10em;
+>             }
+>             #wrapper-first{
+>                 background-color: cornflowerblue;
+>             }
+>             #wrapper-second{
+>                 background-color: cornsilk;
+>             }
+>         </style>
+>     </head>
+>     <body>
+>         <div class = "wrapper">
+>             <div id = "wrapper-first">aaa</div>
+>             <div id = "wrapper-second">bbb</div>
+>             <div id = "wrapper-third">ccc</div>
+>         </div>
+>     </body>
+> </html>
+> ```
+>
 > 
+
+# 16.display: none;和visibility: hidden;的区别
+> display: none;使得元素被隐藏，并且元素不再占据之前的位置。
+>
+> visibility: hidden;使得元素被隐藏，但是只是看不见了，元素还占据着之前的位置。
+
+# 17.回流和重绘的区别
+> 
+
+
+
+# 18.进行SEO（搜索引擎优化）技巧
+
+> - 使用text-indent: -9999px;实现SEO
+>    	1. 因为在SEO中，h1是很重要的标签，一般来说，我们会把网站的LOGO放在h1标签中，但是搜索引擎只能识别文字，不能识别图片，为了SEO，我们可以使用text-indent: -9999px隐藏文字。（因为搜索引擎会把使用display: none;的部分忽略，所以不能使用sidplay: none;）。
+

@@ -1,6 +1,24 @@
 # 1. BFC是什么，怎么触发，一般用来做什么
 
- 
+> BFC是block formatting context，块级格式上下文。
+>
+> BFC有5种触发条件
+>
+> 1. 根元素
+>
+> 2. float属性是left或right。
+>
+> 3. position属性是absolute或fixed。
+>
+> 4. overflow属性是auto或hidden或scroll。
+>
+> 5. 元素类型（display属性）是inline-block或table-caption或table-cell。
+>
+> BFC可以控制内部的块级元素的排列方式，我们可以使用BFC来实现常见3种效果
+>
+> 1. 创建BFC避免相邻的margin重叠。
+> 2. 创建BFC清除浮动带来的影响。
+> 3. 创建BFC实现自适应两栏布局。
 
 # 2. CSS选择器优先级
 
@@ -498,3 +516,459 @@
 > - 使用text-indent: -9999px;实现SEO
 >    	1. 因为在SEO中，h1是很重要的标签，一般来说，我们会把网站的LOGO放在h1标签中，但是搜索引擎只能识别文字，不能识别图片，为了SEO，我们可以使用text-indent: -9999px隐藏文字。（因为搜索引擎会把使用display: none;的部分忽略，所以不能使用sidplay: none;）。
 
+# 19.如何使用CSS画三角形
+
+> CSS盒子模型中，在两条border的相交处，浏览器会绘制一条接合线，我们只需要把元素的width和height属性设置为0，再把border-width设置为较大的值，任选2条或3条border，把它们的颜色设置为transparent。
+>
+> ```{html}
+> <!DOCTYPE html>
+> <html>
+>  <head>
+>      <meta charset = "utf-8"/>
+>      <link type = "text/css" rel = "stylesheet" href = "a.css"/>
+>      <style type="text/css">
+>          div{
+>              width: 0em;
+>              height: 0em;
+>              border-width: 3em;
+>              border-color: red red transparent transparent;
+>              border-style: solid;
+>              font-size: 10px;
+>          }
+>      </style>
+>  </head>
+>  <body>
+>      <div></div>
+>  </body>
+> </html>
+> ```
+>
+> 它的原理实际上是隐藏了一些border边，完整的图形应该是四条border边（每条边看上去都是一个三角形）组成的矩形。
+>
+> ```{html}
+> <!DOCTYPE html>
+> <html>
+>  <head>
+>      <meta charset = "utf-8"/>
+>      <link type = "text/css" rel = "stylesheet" href = "a.css"/>
+>      <style type="text/css">
+>          div{
+>              width: 0em;
+>              height: 0em;
+>              border-width: 3em;
+>              border-color: rebeccapurple royalblue indianred wheat;
+>              border-style: solid;
+>              font-size: 10px;
+>          }
+>      </style>
+>  </head>
+>  <body>
+>      <div></div>
+>  </body>
+> </html>
+> ```
+>
+> - 实现带边框的三角形，我们一般使用2个三角形叠加的方法。（使用定位布局来实现2个三角形的层叠）。
+>
+>   ```{html}
+>   <!DOCTYPE html>
+>   <html>
+>       <head>
+>           <meta charset = "utf-8"/>
+>           <link type = "text/css" rel = "stylesheet" href = "a.css"/>
+>           <style type="text/css">
+>               .wrapper{
+>                   width: 0em;
+>                   height: 0em;
+>                   border-width: 3em;
+>                   border-color: transparent transparent black transparent;
+>                   border-style: solid;
+>                   font-size: 10px;
+>                   position: relative;
+>               }
+>               .wrapper>.inside{
+>                   width: 0;
+>                   height: 0;
+>                   border-width: 2.9em;
+>                   border-style: solid;
+>                   border-color: transparent transparent burlywood transparent;
+>                   position: absolute;
+>                   top: -28px;
+>                   left: -29px;
+>               }
+>           </style>
+>       </head>
+>       <body>
+>           <div class = "wrapper">
+>               <div class = "inside"></div>
+>           </div>
+>       </body>
+>   </html>
+>   ```
+>   
+> - 使用带边框的三角形实现一个对话气泡框。（绝对布局的元素是相对于祖先元素中最近一个设置了position: relative;或position: absolute;或position: fixed;来定位的）。
+>
+>   ```{html}
+>   <!DOCTYPE html>
+>   <html>
+>       <head>
+>           <meta charset = "utf-8"/>
+>           <link type = "text/css" rel = "stylesheet" href = "a.css"/>
+>           <style type="text/css">
+>               .wrapper{
+>                   position: relative;
+>                   width: 16em;
+>                   height: 10em;
+>                   font-size: 10px;
+>                   background-color: burlywood;
+>                   margin-top: 10em;
+>                   border: 0.1em solid black;
+>                   text-align: center;
+>                   line-height: 10em;
+>               }
+>               .wrapper>.bottom{
+>                   position: absolute;
+>                   width: 0;
+>                   height: 0;
+>                   border-width: 3em;
+>                   border-style: solid;
+>                   border-color: transparent transparent black transparent;
+>                   margin-left: 5em;
+>                   top: -6em;
+>               }
+>               .wrapper .top{
+>                   position: absolute;
+>                   width: 0;
+>                   height: 0;
+>                   border-width: 2.9em;
+>                   border-style: solid;
+>                   border-color: transparent transparent burlywood transparent;
+>                   left: -2.85em;
+>                   top: -2.8em;
+>               }
+>           </style>
+>       </head>
+>       <body>
+>           <div class = "wrapper">
+>               这是一个对话气泡框。
+>               <div class = "bottom">
+>                   <div class = "top"></div>
+>               </div>
+>           </div>
+>       </body>
+>   </html>
+>   ```
+> 
+> 
+
+# 20.使用CSS实现半圆和圆
+
+> - 实现半圆
+>
+>   - 我们把div的height设置为width的一半，再把左上角和右上角的border-radius属性值设置为等于height，再把左下角和右下角的border-radius设置为0。
+>
+>   - 实际上，原理是因为border-radius设置的是圆角的半径。
+>
+>     ```{html}
+>     <!DOCTYPE html>
+>     <html>
+>         <head>
+>             <meta charset = "utf-8"/>
+>             <link type = "text/css" rel = "stylesheet" href = "a.css"/>
+>             <style type = "text/css">
+>                 div{
+>                     width: 20em;
+>                     height: 10em;
+>                     font-size: 10px;
+>                     border-radius: 10em 10em 0 0;
+>                     border: 0.1em solid red;
+>                 }
+>             </style>
+>         </head>
+>         <body>
+>             <div></div>
+>         </body>
+>     </html>
+>     ```
+>
+> - 实现圆
+>
+>   - 我们把div的height和width设置为相等的值，再把四个角的border-radius设置为height的一半。
+>
+>     ```{html}
+>     <!DOCTYPE html>
+>     <html>
+>         <head>
+>             <meta charset = "utf-8"/>
+>             <link type = "text/css" rel = "stylesheet" href = "a.css"/>
+>             <style type = "text/css">
+>                 div{
+>                     width: 10em;
+>                     height: 10em;
+>                     font-size: 10px;
+>                     border-radius: 5em;
+>                     border: 0.1em solid red;
+>                 }
+>             </style>
+>         </head>
+>         <body>
+>             <div></div>
+>         </body>
+>     </html>
+>     ```
+>
+> - 实现椭圆
+>
+>   - 实现椭圆的语法是border-radius: x/y，x是圆角的水平半径，y是圆角的垂直半径。
+>   
+>   - 我们可以把div的width和height设置为不同的值，再把水平半径x设置为width的一半，把垂直半径设置为height的一半。
+>   
+>   - border-radius: 30px实际上就表达的是，border-radius: 30px/30px;，所以我们实现圆和圆角的写法只是border-radius属性的缩写。 
+>   
+>     ```{html}
+>     <!DOCTYPE html>
+>     <html>
+>         <head>
+>             <meta charset = "utf-8"/>
+>             <link type = "text/css" rel = "stylesheet" href = "a.css"/>
+>             <style type = "text/css">
+>                 div{
+>                     width: 10em;
+>                     height: 5em;
+>                     font-size: 10px;
+>                     border: 0.1em solid red;
+>                     border-radius: 5em/2.5em;
+>                 }
+>             </style>
+>         </head>
+>         <body>
+>             <div></div>
+>         </body>
+>     </html>
+>     ```
+>   
+>     
+>
+
+# 21.CSS选择器的匹配效率
+
+> id选择器 > class选择器 > 元素选择器 > 相邻选择器 > 子选择器 > 后代选择器 > 通配符选择器 > 属性选择器 > 伪类选择器。
+>
+> 原理是，浏览器解析选择器是从右向左的，如果最右面的选择器需要匹配大量元素，那么就会导致解析效率很低，如，#column .content div{}选择器，浏览器会先去页面中匹配所有div元素，再去匹配所有div元素中祖先元素有class名是content的，然后再在这个基础上去寻找祖先元素中id是column的元素。
+
+# 22.垂直居中
+
+> - 文本的垂直居中
+>
+>   - 单行文本的垂直居中
+>
+>     ​		对于单行文本，我们可以直接设置line-height和父元素height值相等。
+>
+>   - 多行文本的垂直居中
+>
+>     ​		对于多行文本，我们可以使用span元素把文本包含起来，然后使用dispaly: inline-block;把span转换成inline-block元素，这样就可以使用inline-block元素的垂直居中方式了。
+>
+> - 元素的垂直居中
+>
+>   - 对于block元素，我们需要先给父元素和子元素设置width和height（因为position只对设置了width和height的元素有效），然后我们对父元素设置position: relative;对子元素设置position: absolute;，再对子元素设置top: 50%和left: 50%，把子元素的margin-left设置为子元素width值得负值的一半，margin-top设置为子元素height负值的一半。**这样我们就实现了block元素的水平垂直居中。**
+>
+>   - 如果只想设置垂直居中，可以把margin-top和top元素删掉，如果只想设置水平居中，可以把left和margin-left属性删掉。
+>
+>     ```{html}
+>     <!DOCTYPE html>
+>     <html>
+>         <head>
+>             <meta charset = "utf-8"/>
+>             <link type = "text/css" rel = "stylesheet" href = "a.css"/>
+>             <style type = "text/css">
+>                 .wrapper{
+>                     border: 0.1em solid red;
+>                     font-size: 10px;
+>                     width: 10em;
+>                     height: 10em;
+>                     position: relative;
+>                     margin-top: 20em;
+>                 }
+>                 div{
+>                     position: absolute;
+>                     width: 5em;
+>                     height: 5em;
+>                     border: 0.1em solid red;
+>                     top: 50%;
+>                     left: 50%;
+>                     margin-left: -2.5em;
+>                     margin-top: -2.5em;
+>                 }
+>             </style>
+>         </head>
+>         <body>
+>             <div class = "wrapper">
+>                 <div></div>
+>             </div>
+>         </body>
+>     </html>
+>     ```
+>
+>     
+>
+>   - 对inline-block元素设置垂直居中
+>
+>     对父元素设置display: table-cell;和vertical-align: middle;，这样可以使得inline-blcok元素垂直居中。
+>
+>     ```{html}
+>     <!DOCTYPE html>
+>     <html>
+>         <head>
+>             <meta charset = "utf-8"/>
+>             <link type = "text/css" rel = "stylesheet" href = "a.css"/>
+>             <style type = "text/css">
+>                 .wrapper{
+>                     border: 0.1em solid red;
+>                     font-size: 10px;
+>                     width: 10em;
+>                     height: 10em;
+>                     margin-top: 20em;
+>                     display: table-cell;
+>                     vertical-align: middle;
+>                 }
+>                 div{
+>                     width: 5em;
+>                     height: 5em;
+>                     border: 0.1em solid red;
+>                     display: inline-block;
+>                 }
+>             </style>
+>         </head>
+>         <body>
+>             <div class = "wrapper">
+>                 <div></div>
+>             </div>
+>         </body>
+>     </html>
+>     ```
+>
+>     
+>
+>     
+
+# 23.水平居中
+
+> - 文本的水平居中
+>
+>   - 单行文本的水平居中
+>
+>     对于单行文本的水平居中，我们可以使用text-align: center;的方法。（text-align: center对于文本、inline元素、inline-block元素、inline-flex元素等都有效）。
+>
+> - 元素的水平居中
+>
+>   - block元素的水平居中
+>
+>     对于block元素，我们可以使用margin-left: auto和margin-right: auto;的方法来设置水平居中。（等价于margin: 0 auto;）
+>
+>   - inline-block元素设置水平居中
+>   
+>     对于inline-block元素，我们可以设置text-align: center;来使得inline-block元素水平居中。
+>
+
+# 24.使用BFC避免外边距叠加问题
+
+> 因为BFC规定，在同一BFC中，相邻的外边距会发生叠加，所以我们可以通过触发创建一个新的BFC来避免。
+>
+> ```{html}
+> <!DOCTYPE html>
+> <html>
+>     <head>
+>         <meta charset="utf-8"/>
+>         <link type = "text/css" rel = "stylesheet" href = "a.css"/>
+>         <style type = "text/css">
+>             .wrapper{
+>                 border: 0.1em solid red;
+>                 font-size: 10px;
+>                 width: 20em;
+>                 overflow: hidden;
+>                 text-align: center;
+>             }
+>             .first,.second{
+>                 line-height: 5em;
+>                 height: 5em;
+>                 width: 5em;
+>                 background-color: coral;
+>             }
+>             .first{
+>                 margin-bottom: 3em;
+>             }
+>             .second{
+>                 background-color: cornflowerblue;
+>                 margin-top: 2em;
+>             }
+>             .createNewBFC{
+>                 overflow: hidden; <!-- 创建了一个新的BFC，这样second盒子和first盒子就不在一个BFC了，就不会发生相邻外边距叠加的问题。 -->
+>             }
+>         </style>
+>     </head>
+>     <body>
+>         <div class = "wrapper">
+>             <div class = "first">aaa</div>
+>             <div class = "createNewBFC">
+>                 <div class = "second">bbb</div>
+>             </div>
+>         </div>
+>     </body>
+> </html>
+> ```
+>
+> 
+
+# 25.触发创建新BFC的5种情况
+
+> 1. 根元素
+>
+> 2. float属性设置为left或right。
+>
+> 3. position属性设置为absolute或fixed。
+>
+> 4. overflow属性设置为hidden或auto或scroll。
+>
+> 5. display属性为inline-block、table-caption、table-cell。
+>
+> **根元素会创建一个BFC，所以在默认情况下，一个页面中所有块级盒子都在一个BFC中。**
+
+# 26.实现自适应两栏布局
+
+> 自适应两栏布局是指，在左右两列中，有一列的宽度自适应，另一列的宽度固定。
+>
+> - 使用BFC实现自适应两栏布局
+>
+>   ```{html}
+>   <!DOCTYPE html>
+>   <html>
+>       <head>
+>           <meta charset="utf-8"/>
+>           <link type = "text/css" rel = "stylesheet" href = "a.css"/>
+>           <style type = "text/css">
+>               .first,.second{
+>                   background-color: coral;
+>                   font-size: 10px;
+>               }
+>               .first{
+>                   float: left;
+>                   width: 20em;
+>                   height: 20em;
+>               }
+>               .second{
+>                   background-color: cornflowerblue;
+>                   height: 30em;
+>                   overflow: hidden; <!-- second元素变成了一个新的BFC。 -->
+>               }
+>           </style>
+>       </head>
+>       <body>
+>           <div class = "first"></div>
+>           <div class = "second"></div>
+>       </body>
+>   </html>
+>   ```
+>
+>   
+>
+> - 

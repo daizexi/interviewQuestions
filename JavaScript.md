@@ -81,3 +81,135 @@ a[6](); //6
 > 6. \>>，无符号右移，它会把除符号位外31位向右移指定位。
 > 7. \>>>，有符号右移，有符号右移对于正数来说和无符号右移没有区别，但是对于负数，由于负数是使用补码保存的，它会把补码直接当成正常的二进制右移（整个32位），负数做有符号右移之后，会变为正数，且会变得非常大。
 
+# 6.防抖和节流
+
+> - 什么时候用到防抖和节流
+>
+>   - 当某一个事件的触发频率非常高，如，用户点击按钮、用户移动鼠标，为了节省浏览器资源，就需要对事件的执行做出限制。
+>
+> - 防抖
+>
+>   - 防抖，就是在用户点击按钮、用户移动鼠标触发事件后，需要等待一段时间再执行事件函数，如果在等待的过程中，这个事件再次触发，那么重新计时等待。
+>
+>     ```{html}
+>     <!DOCTYPE html>
+>     <html>
+>         <head>
+>             <meta charset = "utf-8"/>
+>             <link type = "text/css" rel = "stylesheet" href = "a.css"/>
+>             <style type = "text/css"></style>
+>         </head>
+>         <body>
+>             <h1>防抖</h1>
+>             <input id = "btn" type = "button" value = "add"/>
+>             <h2>数字</h2>
+>             <span id = "num">0</span>
+>         </body>
+>         <script>
+>             let button = document.getElementById('btn');
+>             let number = document.getElementById('num');
+>     
+>             let m = 0;
+>             let time;
+>             let isOk = true;
+>     
+>             //不使用闭包，思路清晰。
+>             button.onclick = function()
+>             {
+>                 console.log("xxxxxx");
+>     
+>                 clearTimeout(time);
+>     
+>                 time = setTimeout(() => {
+>                     number.innerHTML = ++m;
+>                 },1000);
+>             }
+>     
+>             //使用闭包，使用闭包的好处是把防抖封装成了函数。
+>             function debounce(fn,delay)
+>             {
+>                 let timer = null;
+>                 return function()
+>                 {
+>                     console.log("xxxxx");
+>                     if(timer !== null)
+>                     {
+>                         clearTimeout(timer);
+>                     }
+>                     timer = setTimeout(fn,delay);
+>                 }
+>             }
+>     
+>             button.onclick = debounce(() => {number.innerHTML = ++m},1000);
+>     
+>         </script>
+>     </html>
+>     ```
+>
+>     
+>
+> - 节流
+>
+>   - 节流，是指在触发事件之后，只执行第一次，然后在一段时间内，剩下的触发都不会执行事件。（用于即使用户频繁触发事件，也要求有一定反馈的场景）。
+>
+>     ```{html}
+>     <!DOCTYPE html>
+>     <html>
+>         <head>
+>             <meta charset = "utf-8"/>
+>             <link type = "text/css" rel = "stylesheet" href = "a.css"/>
+>             <style type = "text/css"></style>
+>         </head>
+>         <body>
+>             <h1>节流</h1>
+>             <input id = "btn" type = "button" value = "add"/>
+>             <h2>数字</h2>
+>             <span id = "num">0</span>
+>         </body>
+>         <script>
+>             let button = document.getElementById('btn');
+>             let number = document.getElementById('num');
+>     
+>             let m = 0;
+>             let time;
+>             let isOk = true;
+>     
+>             //不使用闭包，思路清晰。
+>             button.onclick = function()
+>             {
+>                 console.log("xxxxxx");
+>                 if(!isOk)
+>                 {
+>                     return;
+>                 }
+>                 number.innerHTML = ++m;
+>                 isOk = false;
+>                 time = setTimeout(() => {isOk = true;clearTimeout(time);},1000);
+>             }
+>     
+>             //使用闭包，把节流封装成函数
+>             function throttle(fn,delay)
+>             {
+>                 let isOk = true;
+>                 return function()
+>                 {
+>                     if(!isOk)
+>                     {
+>                         return;
+>                     }
+>                     isOk = false;
+>                     fn();
+>                     time = setTimeout(() => {
+>                         isOk = true;
+>                         clearTimeout(time);
+>                     },delay);
+>                 }
+>             }
+>     
+>             button.onclick = throttle(() => {number.innerHTML = ++m;},1000);
+>     
+>         </script>
+>     </html>
+>     ```
+>
+>     

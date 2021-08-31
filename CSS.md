@@ -1,6 +1,6 @@
 # 1. BFC是什么，怎么触发，一般用来做什么
 
-> BFC是block formatting context，块级格式上下文。
+> BFC是block formatting context，块级格式上下文，它是一个独立的渲染区域，不会对外部造成影响，只有块级盒子参与BFC，它规定了内部元素的布局方式。
 >
 > BFC有5种触发条件
 >
@@ -969,6 +969,24 @@
 >   </html>
 >   ```
 >
->   
+> 
 >
-> - 
+
+# 26.CSS3中浏览器的私有前缀
+
+> 因为一些CSS3标准还没有成为W3C的标准，因此对于这些属性，每种浏览器有不同的实现，为了在不同浏览器中兼容效果，我们必须加上浏览器的私有前缀。
+>
+> - Chrome、Safari、Edge
+>   - 使用 -webkit- 前缀。
+> - Firefox
+>   - 使用 -moz- 前缀。
+> - Opera
+>   - 使用 -o- 前缀。
+
+# 27.常见的浏览器内核
+
+> - Chrome、Safari使用Webkit内核。
+> - FireFox使用Gecko内核。
+> - IE使用Trident内核。
+> - Opear和部分版本Chrome使用blink内核。
+

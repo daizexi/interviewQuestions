@@ -108,23 +108,23 @@ a[6](); //6
 >         <script>
 >             let button = document.getElementById('btn');
 >             let number = document.getElementById('num');
->         
+>                         
 >             let m = 0;
 >             let time;
 >             let isOk = true;
->         
+>                         
 >             //不使用闭包，思路清晰。
 >             button.onclick = function()
 >             {
 >                 console.log("xxxxxx");
->         
+>                         
 >                 clearTimeout(time);
->         
+>                         
 >                 time = setTimeout(() => {
 >                     number.innerHTML = ++m;
 >                 },1000);
 >             }
->         
+>                         
 >             //使用闭包，使用闭包的好处是把防抖封装成了函数。
 >             function debounce(fn,delay)
 >             {
@@ -139,9 +139,9 @@ a[6](); //6
 >                     timer = setTimeout(fn,delay);
 >                 }
 >             }
->         
+>                         
 >             button.onclick = debounce(() => {number.innerHTML = ++m},1000);
->         
+>                         
 >         </script>
 >     </html>
 >     ```
@@ -169,11 +169,11 @@ a[6](); //6
 >         <script>
 >             let button = document.getElementById('btn');
 >             let number = document.getElementById('num');
->         
+>                         
 >             let m = 0;
 >             let time;
 >             let isOk = true;
->         
+>                         
 >             //不使用闭包，思路清晰。
 >             button.onclick = function()
 >             {
@@ -186,7 +186,7 @@ a[6](); //6
 >                 isOk = false;
 >                 time = setTimeout(() => {isOk = true;clearTimeout(time);},1000);
 >             }
->         
+>                         
 >             //使用闭包，把节流封装成函数
 >             function throttle(fn,delay)
 >             {
@@ -205,9 +205,9 @@ a[6](); //6
 >                     },delay);
 >                 }
 >             }
->         
+>                         
 >             button.onclick = throttle(() => {number.innerHTML = ++m;},1000);
->         
+>                         
 >         </script>
 >     </html>
 >     ```
@@ -377,3 +377,253 @@ a[6](); //6
 >   - 继承就是让一个对象获得另一个对象的方法，它的意义在于重用代码，提升效率。
 > - 多态
 >   - 
+
+# 21.Promise，看代码，说执行顺序
+
+>  - 1.
+>  ```{javascript}
+>  let promise = new Promise((resolve,reject) =>{
+>     console.log("promise");
+>     resolve();})
+>  promise.then(() => {
+>     console.log("Fulfilled");
+>  })
+>  console.log("Hi")
+>  ```
+>
+>  //promise
+>
+>  //Hi
+>
+>  //Fulfilled
+>
+>  因为promise实例一旦创建，就会立即执行，所以首先打印出promise，且因为.then方法指定的回调函数会在所有同步函数执行结束后执行，所以先打印出Hi，再打印出Fulfilled。
+>
+>  - 2.
+>
+>  ```{javascript}
+>  let p1 = new Promise((resolve,reject) =>{
+>     setTimeout(() => reject(new Error('fail')),1000);
+>  })
+>  let p2 = new Promise((resolve,reject) =>{
+>     setTimeout(() => resolve(p1),1000);})
+>  p2.then((value) => {console.log(value)}).catch((error) => console.log(error))
+>  ```
+>
+>  //fail
+>
+>  因为如果p2的resolve()函数返回的是另一个Promise p1，那么p2的then方法都将变为针对p1的。
+>
+>  - 3.
+>  ```{javascript}
+>  new Promise((resolve,reject) =>{
+>      resolve(1);
+>      console.log(2);
+>  }).then((value) => {
+>      console.log(value);})
+>  ```
+>  //2
+>  //1
+>
+>  因为resolve和reject函数都不会终结Promise对象的参数函数的运行，且因为立即resolve的Promise是在本次事件循环的末尾执行，总是晚于本轮循环的同步任务。
+>
+>  ```{javascript}
+>  new Promise((resolve,reject) =>{
+>      return resolve(1);
+>      console.log(2);
+>  }).then((value) => {
+>      console.log(value);})
+>  ```
+>
+>  // 1
+>
+>  因为加了return，Promise的参数函数就不会继续往后执行。
+>
+>  - 4.
+>
+>    ```{javascript}
+>    setTimeout(() => {
+>        console.log("three");
+>    },0);
+>    Promise.resolve().then(function(){
+>        console.log("two");
+>    });
+>    console.log("one");
+>    ```
+>
+>    //one
+>
+>    //two
+>
+>    //three
+>
+>    因为立即resolve的Promise的回调函数是在本轮事件循环末尾执行，所以晚于同步代码console.log("two");
+>
+>    因为setTimeout(fn,0)是在下一轮事件循环开始时执行，所以最晚。
+>
+>  - 
+
+# 22.什么是Promise
+
+> Prommise是一个容器，保存着异步操作的结果。
+>
+> Promise有2个特点，1. Promise有3种状态，Pending表示执行中，Fulfilled表示成功，Rejected表示失败。2.Promise的状态一旦改变，就不会再改变。
+>
+> ES6规定，Promise对象是一个构造函数，它可以生成Promise实例，Promise构造函数接收1个函数作为参数，这个函数有2个参数，resolve和reject，这是2个函数，resolve在Promise对象从Pending转换为Fulfilled时调用，它的参数将会被传给.then()方法，reject在Promise对象从Pending转换为Rejected时调用，它的参数将传给.then()方法的第二个参数函数。
+
+# 23.Promise的8个方法
+
+> 1. promise.prototype.then()
+>
+>    - promise.prototype.then()方法的作用是为Promise实例添加在对象改变时调用的回调函数。
+>    - promise.prototype.then()方法接收2个函数作为参数，第一个函数是Promise实例状态从Pending改变为Fulfilled时的回调函数，第二个函数是Promise实例状态从Pending改变为Rejected时的回调函数。
+>    - promise.prototype.then()方法返回的是一个Promise实例，所以可以采用链式写法。
+>
+> 2. promise.prototype.catch()
+>
+>    - promise.prototype.catch()方法的作用是指定发生错误时或Promise实例从Pending改变为Rejected时的回调函数。
+>    - 建议使用promise.prototype.catch()定义Promise实例从Pending改变为Rejected时的回调函数，因为Promise对象的错误具有冒泡性质，会一直向后传递，这样catch方法可以捕获前面所有部分传来的错误。
+>
+> 3. Promise.all()
+>
+>    - Promise.all()方法的作用是把多个Promise实例打包成一个新的Promise实例。
+>
+>      ```{javascript}
+>      let p = Promise.all([p1,p2,p3]);
+>      ```
+>
+>      p1、p2、p3都是Promise实例，如果不是，那么会先调用Promise.resolve()。
+>
+>    - Promise.all()接收1个数组作为参数，也可以不是数组，但必须具有Iterator接口。
+>
+>    - Promise.all()得到的p的状态由p1、p2、p3决定，有2种情况
+>
+>      1. 只有p1、p2、p3的状态都变成Fulfilled，p的状态才会变成Fulfilled，这时p1、p2、p3的返回值组成一个数组，传递给p的回调函数。
+>      2. 只要p1、p2、p3中有1个变为Rejected，p的状态就变为Rejected，这时第一个变为Rejected的实例的返回值会传递给p的回调函数。
+>
+> 4. Promise.race()
+>
+>    - Promise.race()方法的作用是将多个Promise实例包装成一个Promise实例。
+>
+>      ```{javascript}
+>      let p = Promise.race([p1,p2,p3]);
+>      ```
+>
+>    - Promise.race()和Promise.all()的不同在于，Promise.race()得到的p的状态，由p1、p2、p3中第一个发生改变的Promise实例决定，率先发生改变的Promise实例的返回值（resolve或reject函数中的值）就会传递给p的回调函数。
+>
+> 5. Promise.resolve()
+>
+>    - Promise.resolve()方法的作用是将现有对象转换为Promise实例。
+>
+> 6. Promise.reject()
+>
+>    - Promise.reject()方法的作用是返回一个Promise实例，状态为Rejected。
+>
+> 7. 
+
+# 24.setTimeout()函数的执行
+
+> setTimeout()函数接收2个参数，1.待加入消息队列的消息。2.一个时间值（默认是0）。这个时间值代表了消息被实际加入消息队列的最小延迟时间，如果队列中没有其他消息并且栈为空，那么在这段延迟时间过去之后，消息会被马上处理，但是如果队列中有其他消息，setTimeout()消息必须等待其他消息处理完。
+
+# 25.执行上下文
+
+> 当一段JavaScript代码在运行的时候，它实际上是运行在执行上下文中，有3种类型的代码会创建一个执行上下文。
+>
+> 1. 全局上下文是为运行代码主体而创建的执行上下文，它是为了那些存在于函数之外的所有代码创建的。
+>
+> 2. 每个函数会在调用的时候创建自己的执行上下文。
+>
+> 3. 使用eval()函数也会创建一个新的执行上下文。
+>
+> 每一个上下文本质上是一种作用域层级。
+
+# 26.执行上下文栈
+
+> 每个执行上下文在创建时会被推入一个执行上下文栈，当退出的时候它会从栈中退出并销毁。
+>
+> ```{javascript}
+> let outputElem = document.getElementById("output");
+> 
+> let userLanguages = {
+>   "Mike": "en",
+>   "Teresa": "es"
+> };
+> 
+> function greetUser(user) {
+>   function localGreeting(user) {
+>     let greeting;
+>     let language = userLanguages[user];
+> 
+>     switch(language) {
+>       case "es":
+>         greeting = `¡Hola, ${user}!`;
+>         break;
+>       case "en":
+>       default:
+>         greeting = `Hello, ${user}!`;
+>         break;
+>     }
+>     return greeting;
+>   }
+>   outputElem.innerHTML += localGreeting(user) + "<br>\r";
+> }
+> 
+> greetUser("Mike");
+> greetUser("Teresa");
+> greetUser("Veronica");
+> ```
+>
+> - 程序开始运行时，全局上下文就会被创建好。
+>
+>   - 当执行到 
+>
+>     ```
+>     greetUser("Mike")
+>     ```
+>
+>      的时候会为 
+>
+>     ```
+>     greetUser()
+>     ```
+>
+>      函数创建一个它的上下文。这个执行上下文会被推入执行上下文栈中。
+>
+>     - 当 `greetUser()` 调用 `localGreeting()`的时候会为该方法创建一个新的上下文。并且在 `localGreeting()` 退出的时候它的上下文也会从执行栈中弹出并销毁。 程序会从栈中获取下一个上下文并恢复执行, 也就是从 `greetUser()` 剩下的部分开始执行。
+>     - `greetUser()` 执行完毕并退出，其上下文也从栈中弹出并销毁。
+>
+>   - 当 
+>
+>     ```
+>     greetUser("Teresa")
+>     ```
+>
+>      开始执行时，程序又会为它创建一个上下文并推入栈顶。
+>
+>     - 当 `greetUser()` 调用 `localGreeting()`的时候另一个上下文被创建并用于运行该函数。 当 `localGreeting()` 退出的时候它的上下文也从栈中弹出并销毁。 `greetUser()` 得到恢复并继续执行剩下的部分。
+>     - `greetUser()` 执行完毕并退出，其上下文也从栈中弹出并销毁。
+>
+>   - 然后执行到 
+>
+>     ```
+>     greetUser("Veronica")
+>     ```
+>
+>      又再为它创建一个上下文并推入栈顶。
+>
+>     - 当 `greetUser()` 调用 `localGreeting()`的时候，另一个上下文被创建用于执行该函数。当 `localGreeting()`执行完毕，它的上下文也从栈中弹出并销毁。
+>     - `greetUser()` 执行完毕退出，其上下文也从栈中弹出并销毁。
+>
+> - 主程序退出，全局执行上下文从执行栈中弹出。此时栈中所有的上下文都已经弹出，程序执行完毕。
+
+# 27.执行上下文和作用域链的关系
+
+> 执行上下文保存着自己的作用域链，每个执行上下文都有自己的作用域链，执行上下文在被销毁时，作用域链也会被销毁。
+
+# 28.作用域链
+
+> 每个执行上下文都会有一个包含其中变量的对象，全局上下文中的叫变量对象，函数局部上下文中的叫活动对象。
+>
+> 作用域链是一个包含着指针的列表，每个指针指向一个变量对象。
+>
+> 作用域链引用着从当前执行上下文一直到全局上下文的所有变量对象，这样作用域链就保证了可以从当前执行上下文可以找到包含执行上下文中的变量。

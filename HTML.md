@@ -1,0 +1,8 @@
+# 1.HTML、HTML5、XHTML的区别
+
+> HTML是指HTML 4.01
+>
+> HTML5是指HTML 5
+>
+> XHTML是指更严格的HTML 4.01，如XHTML的标签必须闭合，XHTML的标签必须小写。
+

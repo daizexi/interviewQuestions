@@ -2,6 +2,14 @@
 
 > BFC是block formatting context，块级格式上下文，它是一个独立的渲染区域，不会对外部造成影响，只有块级盒子参与BFC，它规定了内部元素的布局方式。
 >
+> BFC的5条规定
+>
+> 1. 在同一个BFC中，相邻的margin会发生叠加。
+> 2. 计算一个BFC高度时，浮动元素的高度也会计算在其中。
+> 3. 在一个BFC中，盒子会在垂直方向上一个接一个的排列。
+> 4. BFC不会与外部的float元素发生重叠。
+> 5. 在一个BFC中，每一个盒子的margin-left都会贴着包含盒子的元素的border-left，即使存在浮动元素，也是这样。
+>
 > BFC有5种触发条件
 >
 > 1. 根元素
@@ -31,8 +39,17 @@
 
 # 3. flex代码题
 ## 回答a和b的宽度是多少
+
+100px和200px。
+
 ## 如果把container的宽度改成50px会怎样
+
+a的宽度是16.6，b的宽度是16.6 * 2。
+
 ## flex这个属性是哪几个属性的简写
+
+flex-grow、flex-shrink、flex-basis。
+
 ```{html}
 <template>
     <div class="container">
@@ -47,7 +64,7 @@
     width:300px;
 }
 .a{
-    flex:1;
+    flex:1; //flex是flex-grow、flex-shrink、flex-basis的简写，因为默认值设置了flex-basis: auto;所以width不再起效果。
     width:50px;
 }
 .b{
@@ -451,7 +468,7 @@
 >   4. 行内元素只能设置marigin-left属性和margin-right属性。
 > - 块元素
 >   1. 块元素排斥其他元素和它共占一行。
->   2. 块元素内部科一般容纳其他块元素或行内元素。
+>   2. 块元素内部一般容纳其他块元素或行内元素。
 >   3. 块元素可以设置width属性和height属性。
 >   4. 块元素可以设置4个方向上的margin属性。
 
@@ -809,7 +826,40 @@
 >     </html>
 >     ```
 >
->     
+> - flex实现块元素在父元素中垂直水平居中
+>
+>   ```{html}
+>   <!DOCTYPE html>
+>   <html>
+>       <head>
+>           <meta charset = "utf-8"/>
+>           <link type = "text/css" rel = "stylesheet" href = "a.css"/>
+>           <style type = "text/css">
+>               .wrapper{
+>                   font-size: 10px;
+>                   border: 0.1em solid red;
+>                   width: 20em;
+>                   height: 20em;
+>                   display: flex;
+>                   justify-content: center;
+>                   align-items: center;
+>               }
+>               .wrapper div:first-child{
+>                   flex-basis: 10em;
+>                   height: 10em;
+>                   background-color: dodgerblue;
+>               }
+>           </style>
+>       </head>
+>       <body>
+>           <div class = "wrapper">
+>               <div></div>
+>           </div>
+>       </body>
+>   </html>
+>   ```
+>
+>   
 >
 >   - 对inline-block元素设置垂直居中
 >
@@ -847,9 +897,9 @@
 >     </html>
 >     ```
 >
->     
+> 
 >
->     
+> 
 
 # 23.水平居中
 
@@ -990,3 +1040,11 @@
 > - IE使用Trident内核。
 > - Opear和部分版本Chrome使用blink内核。
 
+# 28.会发生继承的样式
+
+> 1. width
+> 2. height
+> 3. font-size
+> 4. line-height（当line-height使用百分比作为单位时，子元素继承利用百分比乘以当前元素font-size得到的值，当line-height使用数字不带单位时，子元素继承这个倍数）
+> 5. text-align
+> 6. color

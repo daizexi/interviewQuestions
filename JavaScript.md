@@ -108,23 +108,23 @@ a[6](); //6
 >         <script>
 >             let button = document.getElementById('btn');
 >             let number = document.getElementById('num');
->                         
+>                                     
 >             let m = 0;
 >             let time;
 >             let isOk = true;
->                         
+>                                     
 >             //不使用闭包，思路清晰。
 >             button.onclick = function()
 >             {
 >                 console.log("xxxxxx");
->                         
+>                                     
 >                 clearTimeout(time);
->                         
+>                                     
 >                 time = setTimeout(() => {
 >                     number.innerHTML = ++m;
 >                 },1000);
 >             }
->                         
+>                                     
 >             //使用闭包，使用闭包的好处是把防抖封装成了函数。
 >             function debounce(fn,delay)
 >             {
@@ -139,9 +139,9 @@ a[6](); //6
 >                     timer = setTimeout(fn,delay);
 >                 }
 >             }
->                         
+>                                     
 >             button.onclick = debounce(() => {number.innerHTML = ++m},1000);
->                         
+>                                     
 >         </script>
 >     </html>
 >     ```
@@ -169,11 +169,11 @@ a[6](); //6
 >         <script>
 >             let button = document.getElementById('btn');
 >             let number = document.getElementById('num');
->                         
+>                                     
 >             let m = 0;
 >             let time;
 >             let isOk = true;
->                         
+>                                     
 >             //不使用闭包，思路清晰。
 >             button.onclick = function()
 >             {
@@ -186,7 +186,7 @@ a[6](); //6
 >                 isOk = false;
 >                 time = setTimeout(() => {isOk = true;clearTimeout(time);},1000);
 >             }
->                         
+>                                     
 >             //使用闭包，把节流封装成函数
 >             function throttle(fn,delay)
 >             {
@@ -205,9 +205,9 @@ a[6](); //6
 >                     },delay);
 >                 }
 >             }
->                         
+>                                     
 >             button.onclick = throttle(() => {number.innerHTML = ++m;},1000);
->                         
+>                                     
 >         </script>
 >     </html>
 >     ```
@@ -363,11 +363,15 @@ a[6](); //6
 
 # 18.什么是原型链
 
-> 
+> 每个构造函数都有一个原型对象，如果这个默认原型对象被重写为另一个构造函数的实例，那么这个原型内部就会有一个属性指向另一个原型。
+>
+> 原型链构成的基础是原型内部有一个属性指向另一个原型。
 
 # 19.原型链的终点是什么
 
 > 正常的原型链都会终止于Object的原型对象，因为Object原型的原型是null。
+>
+> 因为原型链的构成基础是构造函数的原型内部有一个属性指向另一个原型，Object的原型不再指向另一个原型，所以原型链终止了。
 
 # 20.封装、继承、多态
 
@@ -646,3 +650,138 @@ a[6](); //6
 > map和forEach都不会改变原数组。
 >
 > 本质上，forEach()相当于使用for循环遍历数组。
+
+# 31.JavaScript的垃圾回收
+
+> JavaScript的垃圾回收有2种。
+>
+> 1. 标记清理
+>    - 标记清理的策略
+>      - 垃圾回收程序在运行的时候，会标记内存中所有变量，然后会为所有处于还在上下文中的变量和所有被还在上下文中的变量引用的变量的标记删除，然后会销毁剩下还带有标记的变量。
+>    - 标记清理的方法（方法并不重要，重要的是策略）
+>      -  维护2个列表，一个是在上下文中，一个不在上下文中。
+> 2. 引用计数
+>    - 引用计数的策略（因为循环引用的问题，已经逐渐不常用了）
+>      - 引用计数不是那么常用，引用计数会为变量设置它的引用值是1，然后每多一个变量引用该变量，引用值都会加1，如果一个变量的引用值等于0，这个变量就会被回收。
+>    - 循环引用
+>      - 当2个对象互相引用对方的时候，即使已经退出上下文，内存也不会被回收。只有引用值可能出现循环引用，原始值不会出现。
+
+# 32.Object的方法
+
+> 1. Object.defineProperty()，修改属性的默认特性。
+> 2. Object.getOwnPropertyDescriptor()，获取属性的特性。
+> 3. Object.assign()，合并对象。
+> 4. Object.is()，弥补===的不足。
+> 5. Object.getPrototypeOf()，获取传入参数的原型对象。
+> 6. Object.setPrototypeOf()，可以修改传入参数的原型对象。
+> 7. Object.create()，使用传入的参数作为原型对象创建一个新的对象，可以避免Object.setPrototypeOf()带来的性能下降。（原型式继承）。
+
+# 33.JavaScript的6种继承方式
+
+> 1. 原型链继承
+>
+>    - 原型链继承的策略
+>      - 原型链继承是利用了原型链实现子类的实例可以通过原型链访问到父类的原型上的方法。
+>
+>    - 原型链继承的缺点
+>      - 当父类构造函数中存在引用值，如数组时，因为子类的原型是父类的实例，所以子类的实例将会共享原型上的引用值，这使得instance1对于引用值的修改，也会体现到instance2上。
+>
+> 2. 盗用构造函数继承
+>
+>    - 盗用构造函数的策略
+>      - 盗用构造函数会在子类的构造函数中调用父类的构造函数。通过使用call()或apply()方法，父类构造函数中的this对象被绑定到子类构造函数的this对象，当在使用new操作符调用子类构造函数时，子类构造函数的this对象将会指向创建的新对象，因此父类的构造函数的this对象也会指向创建的新对象，因此新对象会拥有父类构造函数中定义的属性和方法。
+>    - 盗用构造函数的缺点
+>      - 盗用构造函数实际上是构造函数模式创建对象，它不能继承父类构造函数原型中的方法。
+>
+> 3. 组合继承
+>
+>    - 组合继承的策略
+>      - 组合继承是结合了原型链继承和盗用构造函数继承，在子类构造函数中通过call()或apply()调用构造函数，并且把子类构造函数的原型重置为父类的实例，这样通过原型链继承了父类构造函数原型中的方法，并且因为每个子类的实例都相当于调用了一遍父类构造函数，所以每个子类实例中都会有父类构造函数中定义的属性，这样就会遮蔽子类的原型中的引用值。
+>    - 组合继承的优点
+>      - 组合继承的优点是保留了instanceof操作符和isPrototypeOf()识别合成对象的能力。
+>
+> 4. 原型式继承
+>
+>    - 原型式继承的策略
+>
+>      - 原型式继承的策略是即使不自定义类型，也可以通过原型实现多个对象间的信息共享。
+>
+>        ```{javascript}
+>        function Object(o)
+>        {
+>            function F()
+>            {}
+>            F.prototype = o;
+>            return new F();
+>        }
+>        ```
+>        原型式继承适用于已经有一个对象的基础上，想在这个对象的基础上创建一个新对象。ES5使用Object.create()函数将原型式继承规范化了。
+>
+>    - Object.create()
+>
+>      - Object.create()函数接收2个参数，第一个参数是传入作为新对象原型的对象，第二个参数是给新对象额外定义属性的对象（第二个参数可选）。
+>
+>        ```{javascript}
+>        function Person(name)
+>        {
+>            this.name = name;
+>        }
+>        
+>        let person1 = new Person("name");
+>        const instance1 = Object.create(person1,{age : {value : 1,writable: false}})
+>        instance1.age;
+>        instance1.name;
+>        Object.getOwnPropertyDescriptor(instance1,"age");
+>        ```
+>
+> 5. 寄生式继承
+>
+>    - 寄生式继承的策略
+>      - 寄生式继承类似于原型式继承，只是它使用了一个工厂函数为新对象定义新的方法。
+>    - 寄生式继承的缺点
+>      - 它的缺点类似于构造函数模式，函数无法重用。
+>
+> 6. 寄生式组合继承
+>
+>    - 寄生式组合继承的策略
+>
+>      - 寄生式组合继承解决了组合继承的效率问题，因为组合继承需要调用2次父类的构造函数，但是使用寄生式组合继承只需要调用一次父类构造函数。
+>
+>      - 寄生式组合继承是使用寄生式继承的方法来继承父类的原型对象。
+>
+>        ```{javascript}
+>        function object(o)
+>        {
+>            function F(){}
+>            F.prototype = o.prototype;
+>            return new F();
+>        }
+>        function inheritPrototype(SubType,SuperType) //通过这个函数减少了一次调用父类构造函数，但是也将子类构造函数的原型重写为了父类构造函数的实例，SubType是子类构造函数，SuperType是父类构造函数。
+>        {
+>            let prototype = object(SuperType);
+>            prototype.constructor = SubType;
+>            SubType.prototype = prototype;
+>        }
+>        ```
+
+# 34.instanceof操作符的原理
+
+> instanceof操作符用来判断引用值类型，因为typeof操作符对于引用值只能得到Object，想要判断哪一类的引用值就要使用instanceof操作符。
+>
+> instanceof操作符的原理是判断目标对象是否存在于左边操作数的原型链上。
+>
+> ```{javascript}
+> function SuperType()
+> {}
+> 
+> function SubType()
+> {}
+> 
+> SubType.prototype = new SuperType();
+> 
+> let instance1 = new SubType();
+> 
+> instance1 instanceof SuperType; //true
+> instance1 instanceof SubType; //true
+> ```
+

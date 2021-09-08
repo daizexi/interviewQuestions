@@ -108,23 +108,23 @@ a[6](); //6
 >         <script>
 >             let button = document.getElementById('btn');
 >             let number = document.getElementById('num');
->                                     
+>                                             
 >             let m = 0;
 >             let time;
 >             let isOk = true;
->                                     
+>                                             
 >             //不使用闭包，思路清晰。
 >             button.onclick = function()
 >             {
 >                 console.log("xxxxxx");
->                                     
+>                                             
 >                 clearTimeout(time);
->                                     
+>                                             
 >                 time = setTimeout(() => {
 >                     number.innerHTML = ++m;
 >                 },1000);
 >             }
->                                     
+>                                             
 >             //使用闭包，使用闭包的好处是把防抖封装成了函数。
 >             function debounce(fn,delay)
 >             {
@@ -139,9 +139,9 @@ a[6](); //6
 >                     timer = setTimeout(fn,delay);
 >                 }
 >             }
->                                     
+>                                             
 >             button.onclick = debounce(() => {number.innerHTML = ++m},1000);
->                                     
+>                                             
 >         </script>
 >     </html>
 >     ```
@@ -169,11 +169,11 @@ a[6](); //6
 >         <script>
 >             let button = document.getElementById('btn');
 >             let number = document.getElementById('num');
->                                     
+>                                             
 >             let m = 0;
 >             let time;
 >             let isOk = true;
->                                     
+>                                             
 >             //不使用闭包，思路清晰。
 >             button.onclick = function()
 >             {
@@ -186,7 +186,7 @@ a[6](); //6
 >                 isOk = false;
 >                 time = setTimeout(() => {isOk = true;clearTimeout(time);},1000);
 >             }
->                                     
+>                                             
 >             //使用闭包，把节流封装成函数
 >             function throttle(fn,delay)
 >             {
@@ -205,9 +205,9 @@ a[6](); //6
 >                     },delay);
 >                 }
 >             }
->                                     
+>                                             
 >             button.onclick = throttle(() => {number.innerHTML = ++m;},1000);
->                                     
+>                                             
 >         </script>
 >     </html>
 >     ```
@@ -726,7 +726,7 @@ a[6](); //6
 >        {
 >            this.name = name;
 >        }
->        
+>                
 >        let person1 = new Person("name");
 >        const instance1 = Object.create(person1,{age : {value : 1,writable: false}})
 >        instance1.age;
@@ -785,3 +785,32 @@ a[6](); //6
 > instance1 instanceof SubType; //true
 > ```
 
+# 35.事件循环
+
+> 首先我们理解JavaScript是一门单线程的语言，那么单线程语言是如何处理异步操作的呢
+>
+> 从浏览器基本原理中，我们知道，浏览器是多进程的，浏览器有一个进程是渲染进程（每个tab都是一个渲染进程），渲染进程下有JavaScript引擎线程、定时器线程、网络请求线程等。
+>
+> JavaScript引擎线程就是执行JavaScript代码的线程，只有它可以执行JavaScript代码，所以JavaScript是单线程语言，但是当JavaScript引擎线程遇到异步代码，如，网络请求，那么JavaScript引擎线程就会把这个线程交给网络请求线程去处理，JavaScript引擎线程自己继续执行同步代码。
+>
+> - 任务队列
+>
+>   - 我们可以把任务分成同步任务和异步任务，同步任务会直接进入主线程执行，而异步任务，如网络请求、setTimeout定时器会进入任务队列。
+>
+> - 事件循环
+>
+>   - 同步任务和异步任务不断进入执行环境，同步任务进入主线程（执行栈），异步任务交给其他线程，当异步任务执行完后，回调会进入任务队列，等待主线程把所有同步任务执行完毕，会从任务队列读取异步任务进行执行，这一个过程就是事件循环。
+>
+> - 事件循环的过程（一次tick的2步过程）
+>   - 最先进入宏任务队列的宏任务进入执行栈（一般是script），执行栈会将其中的同步代码全部执行完毕。
+>   - 检查微任务队列中是否存在微任务，如果存在微任务，一直执行到清空微任务队列。
+
+# 36.宏任务和微任务
+
+> 任务队列包含宏任务队列、微任务队列。当JavaScript引擎线程执行完执行栈中的所有同步任务之后，就会先去从微任务队列中取出异步任务，等所有微任务执行完之后，会去宏任务队列取出宏任务执行。
+>
+> 微任务会在当前循环末尾执行，宏任务会在下一次循环开始的时候执行。
+>
+> 宏任务主要包括，script、setTimeout、setInterval、I/O、UI交互事件
+>
+> 微任务主要包括，Promise的各种方法、MutainObserver。

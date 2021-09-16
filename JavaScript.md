@@ -108,23 +108,23 @@ a[6](); //6
 >         <script>
 >             let button = document.getElementById('btn');
 >             let number = document.getElementById('num');
->                                             
+>                                                 
 >             let m = 0;
 >             let time;
 >             let isOk = true;
->                                             
+>                                                 
 >             //不使用闭包，思路清晰。
 >             button.onclick = function()
 >             {
 >                 console.log("xxxxxx");
->                                             
+>                                                 
 >                 clearTimeout(time);
->                                             
+>                                                 
 >                 time = setTimeout(() => {
 >                     number.innerHTML = ++m;
 >                 },1000);
 >             }
->                                             
+>                                                 
 >             //使用闭包，使用闭包的好处是把防抖封装成了函数。
 >             function debounce(fn,delay)
 >             {
@@ -139,9 +139,9 @@ a[6](); //6
 >                     timer = setTimeout(fn,delay);
 >                 }
 >             }
->                                             
+>                                                 
 >             button.onclick = debounce(() => {number.innerHTML = ++m},1000);
->                                             
+>                                                 
 >         </script>
 >     </html>
 >     ```
@@ -169,11 +169,11 @@ a[6](); //6
 >         <script>
 >             let button = document.getElementById('btn');
 >             let number = document.getElementById('num');
->                                             
+>                                                 
 >             let m = 0;
 >             let time;
 >             let isOk = true;
->                                             
+>                                                 
 >             //不使用闭包，思路清晰。
 >             button.onclick = function()
 >             {
@@ -186,7 +186,7 @@ a[6](); //6
 >                 isOk = false;
 >                 time = setTimeout(() => {isOk = true;clearTimeout(time);},1000);
 >             }
->                                             
+>                                                 
 >             //使用闭包，把节流封装成函数
 >             function throttle(fn,delay)
 >             {
@@ -205,9 +205,9 @@ a[6](); //6
 >                     },delay);
 >                 }
 >             }
->                                             
+>                                                 
 >             button.onclick = throttle(() => {number.innerHTML = ++m;},1000);
->                                             
+>                                                 
 >         </script>
 >     </html>
 >     ```
@@ -726,7 +726,7 @@ a[6](); //6
 >        {
 >            this.name = name;
 >        }
->                
+>                    
 >        let person1 = new Person("name");
 >        const instance1 = Object.create(person1,{age : {value : 1,writable: false}})
 >        instance1.age;
@@ -814,3 +814,20 @@ a[6](); //6
 > 宏任务主要包括，script、setTimeout、setInterval、I/O、UI交互事件
 >
 > 微任务主要包括，Promise的各种方法、MutainObserver。
+
+# 37.JavaScript中的Boolean类型转换
+
+> Boolean()函数可以为任意类型的数据做类型转换，始终返回一个布尔值。
+>
+> 1. 当Boolean()的转换数据类型是String
+>    - Boolean(非空字符串) = true
+>    - Boolean(“”) = false
+> 2. 当Boolean()的转换数据类型是Number
+>    - Boolean(非零数字) = true
+>    - Boolean(0) = false
+>    - Boolean(NaN) = false
+> 3. 当Boolean()的转换数据类型是Object
+>    - Boolean(任何对象) = true
+>    - Boolean(null) = false
+> 4. 当Boolean()的转换数据类型是undefined
+>    - Boolean(undefined) = false

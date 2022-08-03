@@ -33,3 +33,17 @@
 > - 严格模式和混杂模式的区别
 >   - 混杂模式下，盒模型的height和width包括padding和border，而W3C标准中设置width和height只包含content的高和宽。
 >   - 混杂模式下，可以设置inline元素的height和width，W3C标准下不行。
+
+# 5.<script>标签同时包含src和内部代码
+
+> - 当<script>标签同时包含src和内部代码时，内部代码会被忽略。
+> - 如果需要引入外部代码的同时使用内部代码，可以使用两个<script>标签。
+
+# 6.为什么要使用事件委托
+
+> - 给很多个DOM元素添加事件处理器，会很大影响网页的性能。
+> - 如果需要动态删除某一个DOM元素，需要注意把这个DOM元素的事件处理器也删掉，否则会造成内存泄露。
+
+# 7.Cookie、sessionStorage、localStorage的区别
+
+- cookie将会在同源的Http请求中始终携带（除非服务器指定不需要cookie）

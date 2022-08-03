@@ -450,7 +450,7 @@ flex-grow、flex-shrink、flex-basis。
 >
 >   
 
-# 13.<img/>是什么类型的元素
+# 13.\<img/>是什么类型的元素
 
 > <img/>是行内块元素，它可以设置width属性和height属性，并可以和其他行内元素在显示效果上共占一行。
 >
@@ -917,7 +917,7 @@ flex-grow、flex-shrink、flex-basis。
 >
 >   - inline-block元素设置水平居中
 >   
->     对于inline-block元素，我们可以设置text-align: center;来使得inline-block元素水平居中。
+>     对于inline-block元素，我们可以设置text-align: center;来使得inline-block元素水平居中。(textalign: center是设置在父元素上的)。
 >
 
 # 24.使用BFC避免外边距叠加问题

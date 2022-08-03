@@ -108,23 +108,23 @@ a[6](); //6
 >         <script>
 >             let button = document.getElementById('btn');
 >             let number = document.getElementById('num');
->                                                 
+>                                                         
 >             let m = 0;
 >             let time;
 >             let isOk = true;
->                                                 
+>                                                         
 >             //不使用闭包，思路清晰。
 >             button.onclick = function()
 >             {
 >                 console.log("xxxxxx");
->                                                 
+>                                                         
 >                 clearTimeout(time);
->                                                 
+>                                                         
 >                 time = setTimeout(() => {
 >                     number.innerHTML = ++m;
 >                 },1000);
 >             }
->                                                 
+>                                                         
 >             //使用闭包，使用闭包的好处是把防抖封装成了函数。
 >             function debounce(fn,delay)
 >             {
@@ -139,9 +139,9 @@ a[6](); //6
 >                     timer = setTimeout(fn,delay);
 >                 }
 >             }
->                                                 
+>                                                         
 >             button.onclick = debounce(() => {number.innerHTML = ++m},1000);
->                                                 
+>                                                         
 >         </script>
 >     </html>
 >     ```
@@ -169,11 +169,11 @@ a[6](); //6
 >         <script>
 >             let button = document.getElementById('btn');
 >             let number = document.getElementById('num');
->                                                 
+>                                                         
 >             let m = 0;
 >             let time;
 >             let isOk = true;
->                                                 
+>                                                         
 >             //不使用闭包，思路清晰。
 >             button.onclick = function()
 >             {
@@ -186,7 +186,7 @@ a[6](); //6
 >                 isOk = false;
 >                 time = setTimeout(() => {isOk = true;clearTimeout(time);},1000);
 >             }
->                                                 
+>                                                         
 >             //使用闭包，把节流封装成函数
 >             function throttle(fn,delay)
 >             {
@@ -205,9 +205,9 @@ a[6](); //6
 >                     },delay);
 >                 }
 >             }
->                                                 
+>                                                         
 >             button.onclick = throttle(() => {number.innerHTML = ++m;},1000);
->                                                 
+>                                                         
 >         </script>
 >     </html>
 >     ```
@@ -759,7 +759,7 @@ a[6](); //6
 >        {
 >            this.name = name;
 >        }
->     
+>             
 >        let person1 = new Person("name");
 >        const instance1 = Object.create(person1,{age : {value : 1,writable: false}})
 >        instance1.age;
@@ -883,3 +883,67 @@ a[6](); //6
 >    - Boolean(null) = false
 > 4. 当Boolean()的转换数据类型是undefined
 >    - Boolean(undefined) = false
+
+# 38.JavaScript正则表达式
+
+> - JavaScript正则表达式的主体部分使用 / / 括起来。
+> - / /i，i是修饰符，表示不区分大小写。
+
+# 39.Symbol类型
+
+- Symbol类型的作用
+
+  - Symbol类型是ES6加入的一种新的基本类型（原始类型），并且Symbol实例是唯一的，不可变的。
+  - Symbol实例常用来做对象属性的key，避免发生命名冲突。
+
+- Symbol类型的用法
+
+  - 创建一个Symbol实例
+
+    ```{js}
+    let sym = Symbol();
+    ```
+
+    Symbol()函数不是一个构造函数，如果使用new 调用Symbol()，那么会报错TypeError。
+
+  - 判断Symbol实例是否相同
+
+    ```{js}
+    let sym1 = Symbol();
+    let sym2 = Symbol();
+    console.log(sym1 === sym2); //false
+    ```
+
+    因为Symbol是原始值，所以我们可以使用幂等来判断两个Symbol实例是否相等。
+
+  - 在不同作用域复用Symbol实例（全局符号注册表）
+
+    ```{js}
+    let sym = Symbol.for('sym');
+    let sym1 = Symbol.for('sym');
+    console.log(sym === sym1); //true
+    ```
+
+    Symbol实例一旦被创建，那么想要使用它就只有通过指向它的标识符才行。但是如果我们想要在其他作用域中访问这个Symbol，这样我们首先是访问不到标识符了，因此就无法访问到Symbol实例。
+
+    但是如果使用Symbol.for('xxx')创建Symbol实例，那么我们可以再次使用Symbol.for(xxx)获取同一个Symbol实例。
+
+  - 使用符号作为对象属性
+
+    ```{js}
+    let key = Symbol('key1');
+    
+    const obj = {
+      [key]: 'value1',
+    }
+    ```
+
+    想要在对象字面量中使用Symbol实例作为key，那么必须使用计算属性，也就是使用中括号将Symbol实例括起来。否则将被转换为字符串。
+
+    如果不用中括号括起来key的话，那么键名实际上会是'key'而不是Symbol实例。
+
+- 常用内置符号
+
+  - ES6引入了一批常用内置符号，用于暴露语言内部的行为，开发时可以使用或重写这部分内容。
+  - 内置符号都以Symbol工厂函数的字符串属性的形式存在，也就是Symbol函数的字符串属性指向这些内置符号。
+  - 内置符号的用途是方便重新定义这些内置符号，以改变原生的执行逻辑。Symbol.iterator就是内置符号，这个符号指向一个创造迭代器对象的工厂函数。

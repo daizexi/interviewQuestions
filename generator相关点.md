@@ -1,0 +1,5 @@
+1. generator返回一个迭代器对象h，每调用一次h.next会获得一个对象（包含value属性和done属性）以及会触发generator函数继续执行内部代码直到遇到下一个yield停止执行，并将yield后面的表达式求值之后返回给对象的value属性，并且done属性是false。但是如果继续执行的过程中没有遇到yield而遇到了return或函数执行完毕，如果是遇到return，那么会将return后面的表达式求值返回给对象中的value并将done设置为true，如果函数执行完毕，那么对象的value将是undefined，done是true。
+2. 我们可以在调用h.next(val)的时候向next传值，这样这个val将会被视为yield xxx这个表达式的返回值，一般就接近await的特点了。
+3. 我们也可以使用Generator.prototype.throw = function(reason)，抛出错误，这样这个错误可以被generator函数内部的try catch语句捕获，但是如果generator函数内部没有try catch，那么将被函数外部的try catch捕获。
+4. 由于generator函数内部的yield可以交出执行权，因此generator函数相当于JavaScript语言中的协程，而协程是常用的异步解决方案，因此generator函数被用于异步编程，但是由于Generator函数并不能自动恢复执行权，而需要调用迭代器对象的next()方法才可以，因此我们还需要将Generator函数与Promise结合起来。比如yield后面是一个异步操作，或者说返回一个Promise，那么yield会将这个返回的Promise传给迭代器对象的调用next()方法获取的对象中的value，这时我们可以为这个value添加一个then的链式调用，这样我们就可以在promise落定的时候重新恢复generator函数的执行权。
+5. yield* ，当在generator函数中需要调用generator函数时，我们可以使用yiled*来代替...或for ... of。yield\*相当于一个语法糖。yield\*后接一个迭代器对象，则可以使用这个迭代器对象将可迭代对象展开。
